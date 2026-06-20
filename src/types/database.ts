@@ -41,3 +41,26 @@ export type UserStreakRow = UserStreak;
 export type CourseInsert = Omit<Course, 'id' | 'created_at' | 'updated_at'>;
 export type ActivityLogInsert = Omit<ActivityLog, 'id' | 'created_at'>;
 export type UserStreakInsert = Omit<UserStreak, 'id' | 'updated_at'>;
+
+export interface Lesson {
+  id: string;
+  course_id: string;
+  title: string;
+  description: string | null;
+  duration_minutes: number;
+  order_index: number;
+  is_completed: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export type LessonRow = Lesson;
+export type LessonInsert = Omit<Lesson, 'id' | 'created_at' | 'updated_at'>;
+
+// Dashboard data bundle returned by the server
+export interface DashboardData {
+  courses: Course[];
+  activities: ActivityLog[];
+  streak: UserStreak | null;
+  usingFallback: boolean;
+}
