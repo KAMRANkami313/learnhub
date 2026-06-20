@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useTransition } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useTransition, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { Check, Circle, Clock, Loader2 } from 'lucide-react';
 import { toggleLessonCompletion } from '@/lib/actions';
+import { useToast } from '@/components/ui/Toast';
 import { Lesson } from '@/types/database';
 
 interface LessonItemProps {
@@ -14,6 +15,12 @@ interface LessonItemProps {
 export default function LessonItem({ lesson, courseId }: LessonItemProps) {
   const [isCompleted, setIsCompleted] = useState(lesson.is_completed);
   const [isPending, startTransition] = useTransition();
+  const { showToast } = useToast();
+
+  // Sync with prop changes (after revalidation)
+  useEffect(() => {
+    setIsCompleted(lesson.is_completed);
+  }, [lesson.is_completed]);
 
   function handleToggle() {
     startTransition(async () => {
@@ -24,6 +31,17 @@ export default function LessonItem({ lesson, courseId }: LessonItemProps) {
       );
       if (result.success) {
         setIsCompleted(!isCompleted);
+        showToast(
+          'success',
+          isCompleted
+            ? `Marked "${lesson.title}" as incomplete`
+            : `Completed "${lesson.title}" 🎉`
+        );
+      } else {
+        showToast(
+          'error',
+          result.error || 'Failed to update lesson. Please try again.'
+        );
       }
     });
   }
@@ -58,7 +76,10 @@ export default function LessonItem({ lesson, courseId }: LessonItemProps) {
       {/* Checkbox */}
       <div className="shrink-0">
         {isPending ? (
-          <Loader2 className="w-5 h-5 animate-spin" style={{ color: 'var(--text-muted)' }} />
+          <Loader2
+            className="w-5 h-5 animate-spin"
+            style={{ color: 'var(--text-muted)' }}
+          />
         ) : isCompleted ? (
           <motion.div
             initial={{ scale: 0 }}

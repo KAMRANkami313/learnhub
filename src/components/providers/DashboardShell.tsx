@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Sidebar from '@/components/sidebar/Sidebar';
 import MobileNav from '@/components/sidebar/MobileNav';
+import ToastProvider from '@/components/ui/Toast';
 
 export default function DashboardShell({
   children,
@@ -27,7 +28,6 @@ export default function DashboardShell({
 
     checkScreen();
 
-    // Observe sidebar resize
     const observer = new ResizeObserver(() => {
       checkScreen();
     });
@@ -37,7 +37,6 @@ export default function DashboardShell({
       observer.observe(sidebar);
     }
 
-    // Also listen to window resize for mobile detection
     window.addEventListener('resize', checkScreen);
 
     return () => {
@@ -47,28 +46,30 @@ export default function DashboardShell({
   }, []);
 
   return (
-    <div
-      className="min-h-screen"
-      style={{ backgroundColor: 'var(--bg-primary)' }}
-    >
-      {/* Desktop Sidebar */}
-      <Sidebar />
-
-      {/* Main content area */}
-      <main
-        className="transition-all duration-300 ease-in-out min-h-screen"
-        style={{
-          marginLeft: isMobile ? 0 : sidebarWidth,
-          paddingBottom: isMobile ? 80 : 0, // space for mobile nav
-        }}
+    <ToastProvider>
+      <div
+        className="min-h-screen"
+        style={{ backgroundColor: 'var(--bg-primary)' }}
       >
-        <div className="p-4 sm:p-6 lg:p-8 max-w-350 mx-auto">
-          {children}
-        </div>
-      </main>
+        {/* Desktop Sidebar */}
+        <Sidebar />
 
-      {/* Mobile Bottom Nav */}
-      <MobileNav />
-    </div>
+        {/* Main content area */}
+        <main
+          className="transition-all duration-300 ease-in-out min-h-screen"
+          style={{
+            marginLeft: isMobile ? 0 : sidebarWidth,
+            paddingBottom: isMobile ? 80 : 0,
+          }}
+        >
+          <div className="p-4 sm:p-6 lg:p-8 max-w-350 mx-auto">
+            {children}
+          </div>
+        </main>
+
+        {/* Mobile Bottom Nav */}
+        <MobileNav />
+      </div>
+    </ToastProvider>
   );
 }
