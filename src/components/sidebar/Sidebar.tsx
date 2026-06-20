@@ -35,18 +35,18 @@ export default function Sidebar() {
       initial={false}
       animate={{ width: collapsed ? 72 : 260 }}
       transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-      className="fixed left-0 top-0 h-screen z-40 flex flex-col border-r"
+      className="hidden md:flex fixed left-0 top-0 h-screen z-40 flex-col border-r"
       style={{
         backgroundColor: 'var(--bg-sidebar)',
         borderColor: 'var(--border-color)',
       }}
     >
       {/* ===== Logo Section ===== */}
-      <div className="flex items-center h-16 px-4 border-b" style={{ borderColor: 'var(--border-color)' }}>
-        <motion.div
-          layout
-          className="flex items-center gap-3 overflow-hidden"
-        >
+      <div
+        className="flex items-center h-16 px-4 border-b"
+        style={{ borderColor: 'var(--border-color)' }}
+      >
+        <motion.div layout className="flex items-center gap-3 overflow-hidden">
           <div className="relative shrink-0 w-9 h-9 rounded-lg bg-linear-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
             <Sparkles className="w-5 h-5 text-white" />
             <div className="absolute inset-0 rounded-lg bg-linear-to-br from-indigo-500 to-purple-600 animate-pulse-glow opacity-50" />
@@ -77,9 +77,10 @@ export default function Sidebar() {
             className={`
               group flex items-center gap-3 px-3 py-2.5 rounded-xl
               transition-all duration-200 cursor-pointer relative
-              ${item.active
-                ? 'text-white'
-                : 'text-(--text-secondary) hover:text-white'
+              ${
+                item.active
+                  ? 'text-white'
+                  : 'text-(--text-secondary) hover:text-white'
               }
             `}
             style={
@@ -142,7 +143,10 @@ export default function Sidebar() {
                 12 Day Streak
               </span>
             </div>
-            <p className="text-[11px]" style={{ color: 'var(--text-muted)' }}>
+            <p
+              className="text-[11px]"
+              style={{ color: 'var(--text-muted)' }}
+            >
               Keep going! You&apos;re on fire 🔥
             </p>
           </motion.div>

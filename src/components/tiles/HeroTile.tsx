@@ -43,7 +43,7 @@ export default function HeroTile({ streak, totalCourses }: HeroTileProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.1 }}
-      className="rounded-2xl border relative overflow-hidden grain-overlay col-span-1 lg:col-span-2"
+      className="rounded-2xl border relative overflow-hidden grain-overlay col-span-1 md:col-span-2"
       style={{
         backgroundColor: 'var(--bg-card)',
         borderColor: 'var(--border-color)',
@@ -52,7 +52,7 @@ export default function HeroTile({ streak, totalCourses }: HeroTileProps) {
       {/* Mesh gradient background */}
       <div className="absolute inset-0 mesh-bg-1 pointer-events-none" />
 
-      <div className="relative z-10 p-6">
+      <div className="relative z-10 p-5 sm:p-6">
         {/* Greeting */}
         <p
           className="text-sm font-medium mb-1"
@@ -60,12 +60,12 @@ export default function HeroTile({ streak, totalCourses }: HeroTileProps) {
         >
           {getGreeting()} 👋
         </p>
-        <h2 className="text-2xl lg:text-3xl font-bold gradient-text mb-6">
+        <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold gradient-text mb-4 sm:mb-6">
           Keep Learning, Keep Growing
         </h2>
 
-        {/* Stat Cards */}
-        <div className="grid grid-cols-3 gap-3">
+        {/* Stat Cards — stack on small screens, row on larger */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {stats.map((stat, index) => (
             <motion.div
               key={stat.label}
@@ -78,22 +78,26 @@ export default function HeroTile({ streak, totalCourses }: HeroTileProps) {
                 borderColor: 'var(--border-color)',
               }}
             >
-              <stat.icon
-                className="w-5 h-5 mb-2"
-                style={{ color: stat.color }}
-              />
-              <p
-                className="text-lg font-bold"
-                style={{ color: 'var(--text-primary)' }}
-              >
-                {stat.value}
-              </p>
-              <p
-                className="text-xs"
-                style={{ color: 'var(--text-muted)' }}
-              >
-                {stat.label}
-              </p>
+              <div className="flex items-center sm:flex-col sm:items-start gap-2 sm:gap-0">
+                <stat.icon
+                  className="w-5 h-5 sm:mb-2"
+                  style={{ color: stat.color }}
+                />
+                <div className="sm:mt-0">
+                  <p
+                    className="text-base sm:text-lg font-bold"
+                    style={{ color: 'var(--text-primary)' }}
+                  >
+                    {stat.value}
+                  </p>
+                  <p
+                    className="text-xs"
+                    style={{ color: 'var(--text-muted)' }}
+                  >
+                    {stat.label}
+                  </p>
+                </div>
+              </div>
             </motion.div>
           ))}
         </div>

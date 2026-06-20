@@ -16,7 +16,9 @@ export default function StatsTile({ courses }: StatsTileProps) {
   );
   const avgProgress =
     courses.length > 0
-      ? Math.round(courses.reduce((sum, c) => sum + c.progress, 0) / courses.length)
+      ? Math.round(
+          courses.reduce((sum, c) => sum + c.progress, 0) / courses.length
+        )
       : 0;
 
   const items = [
@@ -51,7 +53,7 @@ export default function StatsTile({ courses }: StatsTileProps) {
         borderColor: 'var(--border-color)',
       }}
     >
-      <div className="p-6 space-y-5">
+      <div className="p-5 sm:p-6 space-y-4 sm:space-y-5">
         <h3
           className="text-sm font-semibold uppercase tracking-wider"
           style={{ color: 'var(--text-muted)' }}
@@ -68,16 +70,16 @@ export default function StatsTile({ courses }: StatsTileProps) {
             className="flex items-center gap-3"
           >
             <div
-              className="w-9 h-9 rounded-lg flex items-center justify-center"
+              className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
               style={{ backgroundColor: `${item.color}15` }}
             >
-              <item.icon className="w-4 h-4" style={{ color: item.color }} />
+              <item.icon
+                className="w-4 h-4"
+                style={{ color: item.color }}
+              />
             </div>
-            <div className="flex-1">
-              <p
-                className="text-xs"
-                style={{ color: 'var(--text-muted)' }}
-              >
+            <div className="flex-1 min-w-0">
+              <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
                 {item.label}
               </p>
               <p

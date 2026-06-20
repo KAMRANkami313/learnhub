@@ -25,7 +25,7 @@ export default function DashboardClient({
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold">Dashboard</h1>
+        <h1 className="text-xl sm:text-2xl font-bold">Dashboard</h1>
         <p
           className="mt-1 text-sm"
           style={{ color: 'var(--text-secondary)' }}
@@ -34,9 +34,9 @@ export default function DashboardClient({
         </p>
       </div>
 
-      {/* Bento Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {/* Row 1: Hero (2 cols) + Stats (1 col) */}
+      {/* Bento Grid — responsive columns */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {/* Row 1: Hero (2 cols on sm+) + Stats (1 col on lg) */}
         <Suspense fallback={<HeroSkeleton />}>
           <HeroTile streak={streak} totalCourses={courses.length} />
         </Suspense>
@@ -45,14 +45,14 @@ export default function DashboardClient({
           <StatsTile courses={courses} />
         </Suspense>
 
-        {/* Row 2 & 3: Course Tiles */}
+        {/* Course Tiles */}
         {courses.map((course, index) => (
           <Suspense key={course.id} fallback={<CourseSkeleton />}>
             <CourseTile course={course} index={index} />
           </Suspense>
         ))}
 
-        {/* Activity Tile — spans full width */}
+        {/* Activity Tile — full width */}
         <Suspense fallback={<ActivitySkeleton />}>
           <ActivityTile activities={activities} />
         </Suspense>

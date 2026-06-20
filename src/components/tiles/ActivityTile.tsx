@@ -16,7 +16,6 @@ interface DayData {
 }
 
 export default function ActivityTile({ activities }: ActivityTileProps) {
-  // Build 12 weeks of data
   const today = new Date();
   const days: DayData[] = [];
 
@@ -33,18 +32,15 @@ export default function ActivityTile({ activities }: ActivityTileProps) {
     });
   }
 
-  // Total and average
   const totalActivity = activities.reduce((sum, a) => sum + a.count, 0);
   const activeDays = activities.filter((a) => a.count > 0).length;
 
-  // Group into weeks (columns) for the grid
   const weeks: DayData[][] = [];
   for (let w = 0; w < 12; w++) {
     const weekDays = days.filter((d) => d.week === w);
     weeks.push(weekDays);
   }
 
-  // Month labels
   const monthLabels: { label: string; col: number }[] = [];
   let lastMonth = -1;
   weeks.forEach((week, wi) => {
@@ -68,53 +64,53 @@ export default function ActivityTile({ activities }: ActivityTileProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.5 }}
-      className="rounded-2xl border relative overflow-hidden col-span-1 lg:col-span-3"
+      className="rounded-2xl border relative overflow-hidden col-span-1 md:col-span-3"
       style={{
         backgroundColor: 'var(--bg-card)',
         borderColor: 'var(--border-color)',
       }}
     >
-      <div className="p-6">
+      <div className="p-4 sm:p-6">
         {/* Header */}
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
           <h3
             className="text-sm font-semibold uppercase tracking-wider"
             style={{ color: 'var(--text-muted)' }}
           >
             Learning Activity
           </h3>
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
-                Less
-              </span>
-              {[0, 1, 2, 3, 4].map((level) => (
-                <div
-                  key={level}
-                  className={`w-3 h-3 rounded-sm ${getActivityColor(level)}`}
-                />
-              ))}
-              <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
-                More
-              </span>
-            </div>
+          <div className="flex items-center gap-2">
+            <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
+              Less
+            </span>
+            {[0, 1, 2, 3, 4].map((level) => (
+              <div
+                key={level}
+                className={`w-3 h-3 rounded-sm ${getActivityColor(level)}`}
+              />
+            ))}
+            <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
+              More
+            </span>
           </div>
         </div>
 
-        {/* Contribution Grid */}
-        <div className="overflow-x-auto">
+        {/* Contribution Grid — scrollable on mobile */}
+        <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
           {/* Month labels */}
           <div
-            className="flex gap-0,75 mb-1"
+            className="flex gap-0.75 mb-1 min-w-fit"
             style={{ paddingLeft: '28px' }}
           >
             {monthLabels.map((m, i) => (
               <div
                 key={i}
-                className="text-[10px]"
+                className="text-[10px] shrink-0"
                 style={{
                   color: 'var(--text-muted)',
-                  minWidth: `${(m.col - (monthLabels[i - 1]?.col ?? -1)) * 11}px`,
+                  minWidth: `${
+                    (m.col - (monthLabels[i - 1]?.col ?? -1)) * 14
+                  }px`,
                 }}
               >
                 {m.label}
@@ -122,14 +118,17 @@ export default function ActivityTile({ activities }: ActivityTileProps) {
             ))}
           </div>
 
-          <div className="flex gap-0.75">
+          <div className="flex gap-0.75 min-w-fit">
             {/* Day labels */}
-            <div className="flex flex-col gap-0,75 mr-1">
+            <div className="flex flex-col gap-0.75 mr-1 shrink-0">
               {['', 'Mon', '', 'Wed', '', 'Fri', ''].map((day, i) => (
                 <div
                   key={i}
                   className="h-2.75 flex items-center text-[10px]"
-                  style={{ color: 'var(--text-muted)', width: '24px' }}
+                  style={{
+                    color: 'var(--text-muted)',
+                    width: '24px',
+                  }}
                 >
                   {day}
                 </div>
@@ -139,7 +138,10 @@ export default function ActivityTile({ activities }: ActivityTileProps) {
             {/* Weeks */}
             <div className="flex gap-0.75">
               {weeks.map((week, weekIndex) => (
-                <div key={weekIndex} className="flex flex-col gap-0.75">
+                <div
+                  key={weekIndex}
+                  className="flex flex-col gap-0.75"
+                >
                   {[0, 1, 2, 3, 4, 5, 6].map((dayIndex) => {
                     const day = week.find(
                       (d) => d.dayOfWeek === dayIndex
@@ -161,7 +163,7 @@ export default function ActivityTile({ activities }: ActivityTileProps) {
                         }
                         className={`w-2.75 h-2.75 rounded-sm ${getActivityColor(
                           count
-                        )} transition-colors hover:ring-1 hover:ring-white/30`}
+                        )} transition-colors hover:ring-1 hover:ring-white/30 cursor-pointer`}
                       />
                     );
                   })}
@@ -172,14 +174,17 @@ export default function ActivityTile({ activities }: ActivityTileProps) {
         </div>
 
         {/* Stats Row */}
-        <div className="flex items-center gap-6 mt-4 pt-4 border-t" style={{ borderColor: 'var(--border-color)' }}>
+        <div
+          className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6 mt-4 pt-4 border-t"
+          style={{ borderColor: 'var(--border-color)' }}
+        >
           <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
             <span className="font-bold text-white">{totalActivity}</span>{' '}
             lessons completed in the last 12 weeks
           </p>
           <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
-            <span className="font-bold text-white">{activeDays}</span> active
-            days
+            <span className="font-bold text-white">{activeDays}</span>{' '}
+            active days
           </p>
         </div>
       </div>

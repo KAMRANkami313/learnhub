@@ -225,3 +225,53 @@ body {
       transparent 50%
     );
 }
+/* ============================================
+   MOBILE RESPONSIVE OVERRIDES
+   ============================================ */
+
+/* Prevent overscroll bounce on iOS */
+@media (max-width: 767px) {
+  html,
+  body {
+    overscroll-behavior: none;
+  }
+
+  /* Touch-friendly tap targets */
+  a,
+  button {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Ensure bottom nav doesn't overlap content */
+  .mobile-nav-spacer {
+    height: 80px;
+  }
+
+  /* Smaller tile text on mobile */
+  .rounded-2xl {
+    -webkit-border-radius: 16px;
+  }
+}
+
+/* Safe area insets for notched devices */
+@supports (padding: env(safe-area-inset-bottom)) {
+  .mobile-nav-spacer {
+    height: calc(80px + env(safe-area-inset-bottom));
+  }
+}
+
+/* Landscape phone — still use mobile nav */
+@media (max-width: 767px) and (orientation: landscape) {
+  nav[class*="fixed"] {
+    height: 56px;
+  }
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
