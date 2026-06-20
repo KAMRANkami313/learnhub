@@ -1,73 +1,90 @@
 import { createClient } from '@/lib/supabase/server';
-import { notFound } from 'next/navigation';
-import { fallbackCourses } from '@/data/fallback';
+import { fallbackCourses, fallbackStreak, generateFallbackActivity } from '@/data/fallback';
 import DashboardShell from '@/components/providers/DashboardShell';
-import CourseProgressHeader from '@/components/tiles/CourseProgressHeader';
-import LessonsList from '@/components/tiles/LessonsList';
-import type { Course, Lesson } from '@/types/database';
+import DashboardClient from '@/components/providers/DashboardClient';
+import type { Course, ActivityLog, UserStreak } from '@/types/database';
 
 export const dynamic = 'force-dynamic';
 
-interface CoursePageProps {
-  params: Promise<{ id: string }>;
-}
-
-async function getCourseData(id: string) {
+async function getDashboardData() {
   const supabase = await createClient();
 
-  const { data: course, error: courseError } = await supabase
-    .from('courses')
-    .select('*')
-    .eq('id', id)
-    .single();
+  let courses: Course[] = fallbackCourses;
+  let activities: ActivityLog[] = generateFallbackActivity();
+  let streak: UserStreak | null = fallbackStreak;
+  let usingFallback = false;
 
-  if (courseError || !course) {
-    const fallback = fallbackCourses.find((c) => c.id === id);
-    if (!fallback) return { course: null, lessons: [] };
-    return { course: fallback, lessons: [] };
+  try {
+    // Fetch courses
+    const { data: coursesData, error: coursesError } = await supabase
+      .from('courses')
+      .select('*')
+      .order('created_at', { ascending: true });
+
+    if (!coursesError && coursesData && coursesData.length > 0) {
+      courses = coursesData;
+    } else {
+      usingFallback = true;
+    }
+
+    // Fetch activity logs
+    const { data: activityData, error: activityError } = await supabase
+      .from('activity_logs')
+      .select('*')
+      .order('activity_date', { ascending: true });
+
+    if (!activityError && activityData && activityData.length > 0) {
+      activities = activityData;
+    } else {
+      usingFallback = true;
+    }
+
+    // Fetch streak
+    const { data: streakData, error: streakError } = await supabase
+      .from('user_streaks')
+      .select('*')
+      .limit(1)
+      .single();
+
+    if (!streakError && streakData) {
+      streak = streakData;
+    } else {
+      usingFallback = true;
+    }
+  } catch {
+    usingFallback = true;
   }
 
-  const { data: lessons } = await supabase
-    .from('lessons')
-    .select('*')
-    .eq('course_id', id)
-    .order('order_index', { ascending: true });
-
-  return {
-    course: course as Course,
-    lessons: (lessons ?? []) as Lesson[],
-  };
+  return { courses, activities, streak, usingFallback };
 }
 
-export default async function CoursePage({ params }: CoursePageProps) {
-  const { id } = await params;
-  const { course, lessons } = await getCourseData(id);
-
-  if (!course) {
-    notFound();
-  }
+export default async function Home() {
+  const { courses, activities, streak, usingFallback } = await getDashboardData();
 
   return (
     <DashboardShell>
-      <div className="space-y-6">
-        <CourseProgressHeader course={course} />
+      {/* Fallback banner */}
+      {usingFallback && (
+        <div
+          className="mb-5 px-4 py-3 rounded-xl border text-xs flex items-center gap-2.5 animate-fade-in-up"
+          style={{
+            backgroundColor: 'rgba(245, 158, 11, 0.08)',
+            borderColor: 'rgba(245, 158, 11, 0.2)',
+            color: '#f59e0b',
+          }}
+        >
+          <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse-glow" />
+          <span className="font-medium">
+            Showing demo data — connect Supabase to see live data
+          </span>
+        </div>
+      )}
 
-        {lessons.length > 0 ? (
-          <LessonsList lessons={lessons} courseId={course.id} />
-        ) : (
-          <div
-            className="rounded-2xl border p-8 text-center"
-            style={{
-              backgroundColor: 'var(--bg-card)',
-              borderColor: 'var(--border-color)',
-            }}
-          >
-            <p style={{ color: 'var(--text-muted)' }}>
-              No lessons available for this course yet.
-            </p>
-          </div>
-        )}
-      </div>
+      <DashboardClient
+        courses={courses}
+        activities={activities}
+        streak={streak}
+      />
     </DashboardShell>
   );
 }

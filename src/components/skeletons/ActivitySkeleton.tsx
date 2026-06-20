@@ -9,7 +9,10 @@ export default function ActivitySkeleton() {
           </div>
           <div className="flex gap-1">
             {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="animate-shimmer w-2.75 h-2.75 rounded-[3px]" />
+              <div
+                key={i}
+                className="animate-shimmer w-2.75 h-2.75 rounded-[3px]"
+              />
             ))}
           </div>
         </div>

@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Filter, CheckCircle, Circle, List } from 'lucide-react';
+import { Filter, CheckCircle, Circle, List, CheckCheck, RotateCcw } from 'lucide-react';
 import { Lesson } from '@/types/database';
 import LessonItem from '@/components/tiles/LessonItem';
 import { toggleAllLessons } from '@/lib/actions';
@@ -52,14 +52,22 @@ export default function LessonsList({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay: 0.2 }}
+      transition={{ duration: 0.4, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
       className="space-y-4"
     >
       {/* Header + Filters */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-2">
-          <Filter className="w-4 h-4" style={{ color: 'var(--text-muted)' }} />
-          <span className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
+          <div
+            className="w-7 h-7 rounded-md flex items-center justify-center"
+            style={{ backgroundColor: 'rgba(99, 102, 241, 0.12)' }}
+          >
+            <Filter className="w-3.5 h-3.5" style={{ color: '#818cf8' }} />
+          </div>
+          <span
+            className="text-sm font-medium"
+            style={{ color: 'var(--text-secondary)' }}
+          >
             {filteredLessons.length} lesson{filteredLessons.length !== 1 ? 's' : ''}
           </span>
         </div>
@@ -77,16 +85,13 @@ export default function LessonsList({
               <button
                 key={btn.key}
                 onClick={() => setFilter(btn.key)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200"
+                className="relative flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200"
                 style={{
                   backgroundColor:
                     filter === btn.key
-                      ? 'rgba(99, 102, 241, 0.12)'
+                      ? 'rgba(99, 102, 241, 0.14)'
                       : 'transparent',
-                  color:
-                    filter === btn.key
-                      ? '#6366f1'
-                      : 'var(--text-muted)',
+                  color: filter === btn.key ? '#a5b4fc' : 'var(--text-muted)',
                 }}
               >
                 <btn.icon className="w-3 h-3" />
@@ -96,7 +101,7 @@ export default function LessonsList({
                   style={{
                     backgroundColor:
                       filter === btn.key
-                        ? 'rgba(99, 102, 241, 0.1)'
+                        ? 'rgba(99, 102, 241, 0.12)'
                         : 'rgba(255,255,255,0.04)',
                   }}
                 >
@@ -110,18 +115,29 @@ export default function LessonsList({
           <button
             onClick={handleMarkAll}
             disabled={isPending}
-            className="px-3.5 py-1.5 rounded-xl text-xs font-medium transition-all border hover:bg-white/4"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-medium transition-all border hover:bg-white/4 disabled:opacity-60"
             style={{
               borderColor: 'var(--border-color)',
               color: 'var(--text-secondary)',
               backgroundColor: 'rgba(255,255,255,0.02)',
             }}
           >
-            {isPending
-              ? 'Updating...'
-              : incompleteCount > 0
-              ? 'Complete All'
-              : 'Reset All'}
+            {isPending ? (
+              <>
+                <RotateCcw className="w-3 h-3 animate-spin" />
+                Updating...
+              </>
+            ) : incompleteCount > 0 ? (
+              <>
+                <CheckCheck className="w-3 h-3" />
+                Complete All
+              </>
+            ) : (
+              <>
+                <RotateCcw className="w-3 h-3" />
+                Reset All
+              </>
+            )}
           </button>
         </div>
       </div>
@@ -135,10 +151,7 @@ export default function LessonsList({
               layout
               transition={{ duration: 0.2, delay: index * 0.02 }}
             >
-              <LessonItem
-                lesson={lesson}
-                courseId={courseId}
-              />
+              <LessonItem lesson={lesson} courseId={courseId} />
             </motion.div>
           ))}
         </AnimatePresence>

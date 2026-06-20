@@ -1,7 +1,14 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { ArrowLeft, Clock, BookOpen, CheckCircle2, Sparkles } from 'lucide-react';
+import {
+  ArrowLeft,
+  Clock,
+  BookOpen,
+  CheckCircle2,
+  Sparkles,
+  Trophy,
+} from 'lucide-react';
 import Link from 'next/link';
 import { Course } from '@/types/database';
 import { getIcon } from '@/lib/icons';
@@ -15,24 +22,31 @@ export default function CourseProgressHeader({
 }: CourseProgressHeaderProps) {
   const Icon = getIcon(course.icon_name);
   const isComplete = course.progress === 100;
+  const remaining = course.total_lessons - course.completed_lessons;
 
   return (
     <div className="space-y-5">
       {/* Back link */}
-      <Link
-        href="/"
-        className="inline-flex items-center gap-2 text-sm transition-colors hover:text-white group"
-        style={{ color: 'var(--text-secondary)' }}
+      <motion.div
+        initial={{ opacity: 0, x: -10 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.3 }}
       >
-        <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-        Back to Dashboard
-      </Link>
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 text-sm transition-colors hover:text-white group"
+          style={{ color: 'var(--text-secondary)' }}
+        >
+          <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
+          Back to Dashboard
+        </Link>
+      </motion.div>
 
       {/* Course header card */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
+        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
         className="rounded-2xl glass relative overflow-hidden grain-overlay gradient-border-animated hover-glow"
       >
         {/* Accent bar */}
@@ -47,8 +61,14 @@ export default function CourseProgressHeader({
         <div
           className="absolute inset-0 pointer-events-none opacity-50"
           style={{
-            background: `radial-gradient(ellipse at 10% 20%, ${course.color}10, transparent 60%)`,
+            background: `radial-gradient(ellipse at 10% 20%, ${course.color}12, transparent 60%)`,
           }}
+        />
+
+        {/* Floating orb accent */}
+        <div
+          className="absolute top-4 right-4 w-32 h-32 rounded-full blur-3xl opacity-20 pointer-events-none"
+          style={{ background: `radial-gradient(circle, ${course.color}, transparent 70%)` }}
         />
 
         <div className="relative z-10 p-5 sm:p-6">
@@ -60,9 +80,9 @@ export default function CourseProgressHeader({
             >
               <Icon className="w-7 h-7" style={{ color: course.color }} />
               <div
-                className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"
+                className="absolute inset-0 rounded-2xl opacity-50"
                 style={{
-                  boxShadow: `0 0 25px ${course.color}20`,
+                  boxShadow: `0 0 24px ${course.color}25`,
                 }}
               />
             </div>
@@ -81,8 +101,14 @@ export default function CourseProgressHeader({
                   {course.category}
                 </span>
                 {isComplete && (
-                  <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-emerald-500/12 text-emerald-400 inline-flex items-center gap-1">
-                    <Sparkles className="w-3 h-3" />
+                  <span
+                    className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full inline-flex items-center gap-1"
+                    style={{
+                      backgroundColor: 'rgba(16, 185, 129, 0.12)',
+                      color: '#34d399',
+                    }}
+                  >
+                    <Trophy className="w-3 h-3" />
                     Completed
                   </span>
                 )}
@@ -99,7 +125,7 @@ export default function CourseProgressHeader({
               {/* Description */}
               {course.description && (
                 <p
-                  className="text-sm mb-5 leading-relaxed"
+                  className="text-sm mb-5 leading-relaxed text-pretty"
                   style={{ color: 'var(--text-secondary)' }}
                 >
                   {course.description}
@@ -119,6 +145,7 @@ export default function CourseProgressHeader({
                     className="h-full rounded-full relative"
                     style={{
                       background: `linear-gradient(90deg, ${course.color}, ${course.color}bb)`,
+                      boxShadow: `0 0 12px ${course.color}40`,
                     }}
                   >
                     <div className="absolute inset-0 animate-shimmer rounded-full" />
@@ -152,6 +179,23 @@ export default function CourseProgressHeader({
                     ~{course.total_lessons * 25} min total
                   </span>
                 </div>
+                {!isComplete && (
+                  <div
+                    className="flex items-center gap-1.5 px-2 py-0.5 rounded-md"
+                    style={{ backgroundColor: `${course.color}10` }}
+                  >
+                    <Sparkles
+                      className="w-3 h-3"
+                      style={{ color: course.color }}
+                    />
+                    <span
+                      className="text-[11px] font-semibold"
+                      style={{ color: course.color }}
+                    >
+                      {remaining} lesson{remaining !== 1 ? 's' : ''} to go
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
           </div>

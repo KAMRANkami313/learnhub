@@ -48,21 +48,24 @@ export default function DashboardShell({
   return (
     <ToastProvider>
       <div
-        className="min-h-screen"
+        className="min-h-screen relative"
         style={{ backgroundColor: 'var(--bg-primary)' }}
       >
+        {/* Aurora ambient background */}
+        <div className="aurora-bg" />
+
         {/* Desktop Sidebar */}
         <Sidebar />
 
         {/* Main content area */}
         <main
-          className="transition-all duration-300 ease-in-out min-h-screen"
+          className="relative z-10 transition-all duration-300 ease-in-out min-h-screen"
           style={{
             marginLeft: isMobile ? 0 : sidebarWidth,
             paddingBottom: isMobile ? 80 : 0,
           }}
         >
-          <div className="p-4 sm:p-6 lg:p-8 max-w-350 mx-auto">
+          <div className="p-4 sm:p-6 lg:p-8 max-w-[1600px] mx-auto">
             {children}
           </div>
         </main>

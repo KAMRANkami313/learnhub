@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { Flame, Calendar, TrendingUp } from 'lucide-react';
 import { ActivityLog } from '@/types/database';
 import { getActivityColor } from '@/lib/utils';
 
@@ -63,20 +64,31 @@ export default function ActivityTile({ activities }: ActivityTileProps) {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 0.5 }}
+      transition={{ duration: 0.5, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
       className="rounded-2xl glass relative overflow-hidden col-span-1 md:col-span-3 hover-glow"
     >
       <div className="p-4 sm:p-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
           <div>
-            <h3
-              className="text-[11px] font-semibold uppercase tracking-widest mb-1"
-              style={{ color: 'var(--text-muted)' }}
+            <div className="flex items-center gap-2 mb-1.5">
+              <div
+                className="w-6 h-6 rounded-md flex items-center justify-center"
+                style={{ backgroundColor: 'rgba(99, 102, 241, 0.12)' }}
+              >
+                <Calendar className="w-3 h-3" style={{ color: '#818cf8' }} />
+              </div>
+              <h3
+                className="text-[11px] font-semibold uppercase tracking-widest"
+                style={{ color: 'var(--text-muted)' }}
+              >
+                Learning Activity
+              </h3>
+            </div>
+            <p
+              className="text-base font-bold"
+              style={{ color: 'var(--text-primary)' }}
             >
-              Learning Activity
-            </h3>
-            <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>
               {totalActivity} lessons in the last 12 weeks
             </p>
           </div>
@@ -112,9 +124,7 @@ export default function ActivityTile({ activities }: ActivityTileProps) {
                 className="text-[10px] shrink-0 font-medium"
                 style={{
                   color: 'var(--text-muted)',
-                  minWidth: `${
-                    (m.col - (monthLabels[i - 1]?.col ?? -1)) * 14
-                  }px`,
+                  minWidth: `${(m.col - (monthLabels[i - 1]?.col ?? -1)) * 14}px`,
                 }}
               >
                 {m.label}
@@ -142,14 +152,9 @@ export default function ActivityTile({ activities }: ActivityTileProps) {
             {/* Weeks */}
             <div className="flex gap-0.75">
               {weeks.map((week, weekIndex) => (
-                <div
-                  key={weekIndex}
-                  className="flex flex-col gap-0.75"
-                >
+                <div key={weekIndex} className="flex flex-col gap-0.75">
                   {[0, 1, 2, 3, 4, 5, 6].map((dayIndex) => {
-                    const day = week.find(
-                      (d) => d.dayOfWeek === dayIndex
-                    );
+                    const day = week.find((d) => d.dayOfWeek === dayIndex);
                     const count = day?.count ?? 0;
                     return (
                       <motion.div
@@ -167,7 +172,7 @@ export default function ActivityTile({ activities }: ActivityTileProps) {
                         }
                         className={`w-2.75 h-2.75 rounded-[3px] ${getActivityColor(
                           count
-                        )} transition-all duration-150 hover:ring-1 hover:ring-white/20 hover:scale-125 cursor-pointer`}
+                        )} transition-all duration-150 hover:ring-1 hover:ring-white/30 hover:scale-125 cursor-pointer`}
                       />
                     );
                   })}
@@ -179,21 +184,36 @@ export default function ActivityTile({ activities }: ActivityTileProps) {
 
         {/* Stats Row */}
         <div
-          className="flex flex-wrap items-center gap-x-6 gap-y-2 mt-5 pt-4 border-t"
+          className="flex flex-wrap items-center gap-x-6 gap-y-2.5 mt-5 pt-4 border-t"
           style={{ borderColor: 'var(--border-color)' }}
         >
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-emerald-500" />
+            <div className="w-6 h-6 rounded-md bg-emerald-500/12 flex items-center justify-center">
+              <TrendingUp className="w-3 h-3 text-emerald-400" />
+            </div>
             <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
               <span className="font-bold text-white">{activeDays}</span> active days
             </p>
           </div>
-          <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
-            <span className="font-bold text-white">{totalActivity}</span> lessons completed
-          </p>
-          <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
-            {Math.round((activeDays / 84) * 100)}% consistency
-          </p>
+          <div className="flex items-center gap-2">
+            <div className="w-6 h-6 rounded-md bg-indigo-500/12 flex items-center justify-center">
+              <Calendar className="w-3 h-3 text-indigo-400" />
+            </div>
+            <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
+              <span className="font-bold text-white">{totalActivity}</span> lessons completed
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-6 h-6 rounded-md bg-amber-500/12 flex items-center justify-center">
+              <Flame className="w-3 h-3 text-amber-400" />
+            </div>
+            <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
+              <span className="font-bold text-white">
+                {Math.round((activeDays / 84) * 100)}%
+              </span>{' '}
+              consistency
+            </p>
+          </div>
         </div>
       </div>
     </motion.div>

@@ -1,10 +1,13 @@
 export default function CourseSkeleton() {
   return (
     <div className="rounded-2xl glass overflow-hidden">
-      <div className="h-0.5 w-full animate-shimmer" style={{ backgroundColor: 'rgba(255,255,255,0.06)' }} />
+      <div
+        className="h-0.5 w-full animate-shimmer"
+        style={{ backgroundColor: 'rgba(255,255,255,0.06)' }}
+      />
       <div className="p-4 sm:p-5 space-y-4">
         <div className="flex items-center gap-3">
-          <div className="animate-shimmer w-10 h-10 rounded-xl" />
+          <div className="animate-shimmer w-11 h-11 rounded-xl" />
           <div className="flex-1 space-y-2">
             <div className="animate-shimmer h-4 w-32 rounded" />
             <div className="animate-shimmer h-3 w-20 rounded" />

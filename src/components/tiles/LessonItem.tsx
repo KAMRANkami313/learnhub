@@ -54,7 +54,8 @@ export default function LessonItem({ lesson, courseId }: LessonItemProps) {
       transition={{ duration: 0.2 }}
       className={`
         flex items-center gap-3 sm:gap-4 p-3.5 sm:p-4 rounded-xl border
-        transition-colors duration-200 cursor-pointer group relative overflow-hidden
+        transition-all duration-200 cursor-pointer group relative overflow-hidden
+        hover:border-white/10
         ${isPending ? 'opacity-60 pointer-events-none' : ''}
       `}
       style={{
@@ -62,7 +63,7 @@ export default function LessonItem({ lesson, courseId }: LessonItemProps) {
           ? 'rgba(16, 185, 129, 0.04)'
           : 'rgba(255,255,255,0.02)',
         borderColor: isCompleted
-          ? 'rgba(16, 185, 129, 0.1)'
+          ? 'rgba(16, 185, 129, 0.12)'
           : 'var(--border-color)',
       }}
       onClick={handleToggle}
@@ -77,8 +78,8 @@ export default function LessonItem({ lesson, courseId }: LessonItemProps) {
         className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
         style={{
           background: isCompleted
-            ? 'radial-gradient(circle at 10% 50%, rgba(16, 185, 129, 0.06), transparent 60%)'
-            : 'radial-gradient(circle at 10% 50%, rgba(99, 102, 241, 0.04), transparent 60%)',
+            ? 'radial-gradient(circle at 10% 50%, rgba(16, 185, 129, 0.08), transparent 60%)'
+            : 'radial-gradient(circle at 10% 50%, rgba(99, 102, 241, 0.06), transparent 60%)',
         }}
       />
 
@@ -87,20 +88,20 @@ export default function LessonItem({ lesson, courseId }: LessonItemProps) {
         {isPending ? (
           <Loader2
             className="w-5 h-5 animate-spin"
-            style={{ color: 'var(--text-muted)' }}
+            style={{ color: '#818cf8' }}
           />
         ) : isCompleted ? (
           <motion.div
             initial={{ scale: 0, rotate: -180 }}
             animate={{ scale: 1, rotate: 0 }}
             transition={{ type: 'spring', stiffness: 400, damping: 15 }}
-            className="w-6 h-6 rounded-full bg-linear-to-br from-emerald-400 to-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/20"
+            className="w-6 h-6 rounded-full bg-linear-to-br from-emerald-400 to-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/30"
           >
             <Check className="w-3.5 h-3.5 text-white" strokeWidth={3} />
           </motion.div>
         ) : (
           <Circle
-            className="w-6 h-6 transition-colors group-hover:text-indigo-400"
+            className="w-6 h-6 transition-all duration-200 group-hover:text-indigo-400 group-hover:scale-105"
             style={{ color: 'var(--text-muted)' }}
           />
         )}
@@ -110,11 +111,11 @@ export default function LessonItem({ lesson, courseId }: LessonItemProps) {
       <div className="flex-1 min-w-0 relative z-10">
         <div className="flex items-center gap-2">
           <span
-            className="text-[10px] font-mono px-1.5 py-0.5 rounded-md"
+            className="text-[10px] font-mono px-1.5 py-0.5 rounded-md transition-colors"
             style={{
-              color: isCompleted ? 'rgba(16, 185, 129, 0.7)' : 'var(--text-muted)',
+              color: isCompleted ? 'rgba(16, 185, 129, 0.8)' : 'var(--text-muted)',
               backgroundColor: isCompleted
-                ? 'rgba(16, 185, 129, 0.08)'
+                ? 'rgba(16, 185, 129, 0.1)'
                 : 'rgba(255,255,255,0.03)',
             }}
           >
@@ -149,7 +150,7 @@ export default function LessonItem({ lesson, courseId }: LessonItemProps) {
         style={{ color: 'var(--text-muted)' }}
       >
         <Clock className="w-3 h-3" />
-        <span className="text-[11px]">{lesson.duration_minutes}m</span>
+        <span className="text-[11px] font-medium">{lesson.duration_minutes}m</span>
       </div>
     </motion.div>
   );
