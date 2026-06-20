@@ -22,10 +22,12 @@ export default function DashboardClient({
   streak,
 }: DashboardClientProps) {
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-xl sm:text-2xl font-bold">Dashboard</h1>
+        <h1 className="text-xl sm:text-2xl font-bold tracking-tight">
+          Dashboard
+        </h1>
         <p
           className="mt-1 text-sm"
           style={{ color: 'var(--text-secondary)' }}
@@ -34,9 +36,9 @@ export default function DashboardClient({
         </p>
       </div>
 
-      {/* Bento Grid — responsive columns */}
+      {/* Bento Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {/* Row 1: Hero (2 cols on sm+) + Stats (1 col on lg) */}
+        {/* Row 1: Hero (2 cols) + Stats (1 col) */}
         <Suspense fallback={<HeroSkeleton />}>
           <HeroTile streak={streak} totalCourses={courses.length} />
         </Suspense>

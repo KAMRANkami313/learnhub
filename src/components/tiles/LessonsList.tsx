@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Filter } from 'lucide-react';
+import { Filter, CheckCircle, Circle, List } from 'lucide-react';
 import { Lesson } from '@/types/database';
 import LessonItem from '@/components/tiles/LessonItem';
 import { toggleAllLessons } from '@/lib/actions';
@@ -37,10 +37,15 @@ export default function LessonsList({
     });
   }
 
-  const filterButtons: { key: FilterType; label: string; count: number }[] = [
-    { key: 'all', label: 'All', count: lessons.length },
-    { key: 'completed', label: 'Completed', count: completedCount },
-    { key: 'incomplete', label: 'Remaining', count: incompleteCount },
+  const filterButtons: {
+    key: FilterType;
+    label: string;
+    count: number;
+    icon: React.ElementType;
+  }[] = [
+    { key: 'all', label: 'All', count: lessons.length, icon: List },
+    { key: 'completed', label: 'Done', count: completedCount, icon: CheckCircle },
+    { key: 'incomplete', label: 'To Do', count: incompleteCount, icon: Circle },
   ];
 
   return (
@@ -62,7 +67,7 @@ export default function LessonsList({
         <div className="flex items-center gap-2">
           {/* Filter tabs */}
           <div
-            className="flex rounded-lg border p-0.5"
+            className="flex rounded-xl border p-1"
             style={{
               borderColor: 'var(--border-color)',
               backgroundColor: 'rgba(255,255,255,0.02)',
@@ -72,15 +77,11 @@ export default function LessonsList({
               <button
                 key={btn.key}
                 onClick={() => setFilter(btn.key)}
-                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
-                  filter === btn.key
-                    ? 'text-white'
-                    : ''
-                }`}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200"
                 style={{
                   backgroundColor:
                     filter === btn.key
-                      ? 'rgba(99, 102, 241, 0.15)'
+                      ? 'rgba(99, 102, 241, 0.12)'
                       : 'transparent',
                   color:
                     filter === btn.key
@@ -88,7 +89,19 @@ export default function LessonsList({
                       : 'var(--text-muted)',
                 }}
               >
-                {btn.label} ({btn.count})
+                <btn.icon className="w-3 h-3" />
+                {btn.label}
+                <span
+                  className="text-[10px] px-1.5 py-0.5 rounded-md"
+                  style={{
+                    backgroundColor:
+                      filter === btn.key
+                        ? 'rgba(99, 102, 241, 0.1)'
+                        : 'rgba(255,255,255,0.04)',
+                  }}
+                >
+                  {btn.count}
+                </span>
               </button>
             ))}
           </div>
@@ -97,11 +110,11 @@ export default function LessonsList({
           <button
             onClick={handleMarkAll}
             disabled={isPending}
-            className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all border"
+            className="px-3.5 py-1.5 rounded-xl text-xs font-medium transition-all border hover:bg-white/4"
             style={{
               borderColor: 'var(--border-color)',
               color: 'var(--text-secondary)',
-              backgroundColor: 'rgba(255,255,255,0.03)',
+              backgroundColor: 'rgba(255,255,255,0.02)',
             }}
           >
             {isPending
@@ -116,12 +129,17 @@ export default function LessonsList({
       {/* Lessons list */}
       <div className="space-y-2">
         <AnimatePresence mode="popLayout">
-          {filteredLessons.map((lesson) => (
-            <LessonItem
+          {filteredLessons.map((lesson, index) => (
+            <motion.div
               key={lesson.id}
-              lesson={lesson}
-              courseId={courseId}
-            />
+              layout
+              transition={{ duration: 0.2, delay: index * 0.02 }}
+            >
+              <LessonItem
+                lesson={lesson}
+                courseId={courseId}
+              />
+            </motion.div>
           ))}
         </AnimatePresence>
 
@@ -129,9 +147,15 @@ export default function LessonsList({
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="py-12 text-center"
+            className="py-16 text-center"
           >
-            <p style={{ color: 'var(--text-muted)' }}>
+            <div
+              className="w-14 h-14 mx-auto mb-4 rounded-2xl flex items-center justify-center"
+              style={{ backgroundColor: 'rgba(255,255,255,0.03)' }}
+            >
+              <List className="w-6 h-6" style={{ color: 'var(--text-muted)' }} />
+            </div>
+            <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
               No lessons found for this filter.
             </p>
           </motion.div>

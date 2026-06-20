@@ -4,12 +4,10 @@
 
 import { type ClassValue, clsx } from 'clsx';
 
-// Simple clsx implementation (no need for extra dependency)
 export function cn(...inputs: ClassValue[]) {
   return clsx(inputs);
 }
 
-// Format date to readable string
 export function formatDate(date: string): string {
   return new Date(date).toLocaleDateString('en-US', {
     month: 'short',
@@ -18,7 +16,6 @@ export function formatDate(date: string): string {
   });
 }
 
-// Get greeting based on time of day
 export function getGreeting(): string {
   const hour = new Date().getHours();
   if (hour < 12) return 'Good Morning';
@@ -26,11 +23,12 @@ export function getGreeting(): string {
   return 'Good Evening';
 }
 
-// Get activity level color based on count
+// Activity level color — smoother gradient feel
 export function getActivityColor(count: number): string {
-  if (count === 0) return 'bg-white/5';
-  if (count <= 1) return 'bg-emerald-500/30';
-  if (count <= 2) return 'bg-emerald-500/50';
-  if (count <= 3) return 'bg-emerald-500/70';
+  if (count === 0) return 'bg-white/[0.04]';
+  if (count <= 1) return 'bg-emerald-500/20';
+  if (count <= 2) return 'bg-emerald-500/40';
+  if (count <= 3) return 'bg-emerald-500/60';
+  if (count <= 4) return 'bg-emerald-500/80';
   return 'bg-emerald-500';
 }

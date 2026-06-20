@@ -4,7 +4,7 @@ export const fallbackCourses: Course[] = [
   {
     id: '1',
     title: 'Advanced React Patterns',
-    description: 'Master advanced hooks, render props, compound components, and performance optimization',
+    description: 'Master hooks, render props, compound components, and performance optimization techniques used in production.',
     progress: 75,
     icon_name: 'Code2',
     category: 'Development',
@@ -17,7 +17,7 @@ export const fallbackCourses: Course[] = [
   {
     id: '2',
     title: 'System Design Fundamentals',
-    description: 'Learn to design scalable distributed systems from the ground up',
+    description: 'Learn to design scalable distributed systems — from load balancers and caches to microservices architecture.',
     progress: 45,
     icon_name: 'Server',
     category: 'Architecture',
@@ -30,7 +30,7 @@ export const fallbackCourses: Course[] = [
   {
     id: '3',
     title: 'Machine Learning Basics',
-    description: 'Explore supervised and unsupervised learning, neural networks, and model evaluation',
+    description: 'Explore supervised and unsupervised learning, neural networks, model evaluation, and real-world ML pipelines.',
     progress: 92,
     icon_name: 'Brain',
     category: 'Data Science',
@@ -43,7 +43,7 @@ export const fallbackCourses: Course[] = [
   {
     id: '4',
     title: 'UI/UX Design Principles',
-    description: 'Understand user research, wireframing, prototyping, and design systems',
+    description: 'Understand user research, wireframing, prototyping, and building design systems that scale.',
     progress: 30,
     icon_name: 'Palette',
     category: 'Design',
@@ -63,7 +63,6 @@ export const fallbackStreak: UserStreak = {
   updated_at: new Date().toISOString(),
 };
 
-// Generate deterministic activity data for last 84 days
 export function generateFallbackActivity(): ActivityLog[] {
   const logs: ActivityLog[] = [];
   const today = new Date();

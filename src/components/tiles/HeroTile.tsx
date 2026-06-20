@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Flame, Target, TrendingUp } from 'lucide-react';
+import { Flame, Target, TrendingUp, Zap } from 'lucide-react';
 import { UserStreak } from '@/types/database';
 import { getGreeting } from '@/lib/utils';
 
@@ -18,23 +18,29 @@ export default function HeroTile({ streak, totalCourses }: HeroTileProps) {
     {
       icon: Flame,
       label: 'Current Streak',
-      value: `${currentStreak} days`,
+      value: `${currentStreak}`,
+      unit: 'days',
       color: '#f59e0b',
-      bg: 'rgba(245, 158, 11, 0.1)',
+      gradient: 'from-amber-500/20 to-orange-500/10',
+      glow: 'shadow-amber-500/10',
     },
     {
       icon: Target,
       label: 'Active Courses',
       value: `${totalCourses}`,
+      unit: 'courses',
       color: '#6366f1',
-      bg: 'rgba(99, 102, 241, 0.1)',
+      gradient: 'from-indigo-500/20 to-violet-500/10',
+      glow: 'shadow-indigo-500/10',
     },
     {
       icon: TrendingUp,
       label: 'Best Streak',
-      value: `${longestStreak} days`,
+      value: `${longestStreak}`,
+      unit: 'days',
       color: '#10b981',
-      bg: 'rgba(16, 185, 129, 0.1)',
+      gradient: 'from-emerald-500/20 to-teal-500/10',
+      glow: 'shadow-emerald-500/10',
     },
   ];
 
@@ -43,60 +49,87 @@ export default function HeroTile({ streak, totalCourses }: HeroTileProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.1 }}
-      className="rounded-2xl border relative overflow-hidden grain-overlay col-span-1 md:col-span-2"
-      style={{
-        backgroundColor: 'var(--bg-card)',
-        borderColor: 'var(--border-color)',
-      }}
+      className="rounded-2xl glass relative overflow-hidden grain-overlay col-span-1 md:col-span-2 gradient-border-animated hover-glow"
     >
       {/* Mesh gradient background */}
-      <div className="absolute inset-0 mesh-bg-1 pointer-events-none" />
+      <div className="absolute inset-0 mesh-bg-hero pointer-events-none" />
+
+      {/* Floating orbs */}
+      <div className="absolute top-4 right-8 orb orb-indigo w-32 h-32 animate-float opacity-30" style={{ animationDelay: '0s' }} />
+      <div className="absolute bottom-2 right-20 orb orb-purple w-20 h-20 animate-float opacity-20" style={{ animationDelay: '2s' }} />
 
       <div className="relative z-10 p-5 sm:p-6">
-        {/* Greeting */}
-        <p
-          className="text-sm font-medium mb-1"
-          style={{ color: 'var(--text-secondary)' }}
+        {/* Top badge */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3, delay: 0.3 }}
+          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full mb-4"
+          style={{
+            background: 'rgba(99, 102, 241, 0.1)',
+            border: '1px solid rgba(99, 102, 241, 0.15)',
+          }}
         >
-          {getGreeting()} 👋
-        </p>
-        <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold gradient-text mb-4 sm:mb-6">
-          Keep Learning, Keep Growing
-        </h2>
+          <Zap className="w-3 h-3" style={{ color: '#6366f1' }} />
+          <span className="text-[11px] font-semibold" style={{ color: '#6366f1' }}>
+            {getGreeting()}
+          </span>
+        </motion.div>
 
-        {/* Stat Cards — stack on small screens, row on larger */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        {/* Main heading */}
+        <h2 className="text-2xl sm:text-3xl font-bold gradient-text mb-1.5 leading-tight">
+          Keep Learning,
+          <br />
+          Keep Growing
+        </h2>
+        <p className="text-sm mb-5" style={{ color: 'var(--text-secondary)' }}>
+          Your daily progress at a glance. Stay consistent, stay sharp.
+        </p>
+
+        {/* Stat Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
           {stats.map((stat, index) => (
             <motion.div
               key={stat.label}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.3, delay: 0.3 + index * 0.1 }}
-              className="rounded-xl p-3 border"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: 0.4 + index * 0.08 }}
+              className="rounded-xl p-3 border relative overflow-hidden group cursor-default"
               style={{
-                background: stat.bg,
                 borderColor: 'var(--border-color)',
+                background: 'rgba(255,255,255,0.02)',
               }}
             >
-              <div className="flex items-center sm:flex-col sm:items-start gap-2 sm:gap-0">
+              {/* Hover glow */}
+              <div
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                style={{
+                  background: `radial-gradient(circle at 30% 30%, ${stat.color}10, transparent 70%)`,
+                }}
+              />
+
+              <div className="relative z-10">
                 <stat.icon
-                  className="w-5 h-5 sm:mb-2"
+                  className="w-4 h-4 mb-2"
                   style={{ color: stat.color }}
                 />
-                <div className="sm:mt-0">
+                <div className="flex items-baseline gap-1">
                   <p
-                    className="text-base sm:text-lg font-bold"
+                    className="text-xl font-bold tracking-tight"
                     style={{ color: 'var(--text-primary)' }}
                   >
                     {stat.value}
                   </p>
-                  <p
-                    className="text-xs"
+                  <span
+                    className="text-[11px]"
                     style={{ color: 'var(--text-muted)' }}
                   >
-                    {stat.label}
-                  </p>
+                    {stat.unit}
+                  </span>
                 </div>
+                <p className="text-[11px] mt-0.5" style={{ color: 'var(--text-muted)' }}>
+                  {stat.label}
+                </p>
               </div>
             </motion.div>
           ))}

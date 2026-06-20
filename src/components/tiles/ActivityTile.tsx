@@ -64,48 +64,52 @@ export default function ActivityTile({ activities }: ActivityTileProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.5 }}
-      className="rounded-2xl border relative overflow-hidden col-span-1 md:col-span-3"
-      style={{
-        backgroundColor: 'var(--bg-card)',
-        borderColor: 'var(--border-color)',
-      }}
+      className="rounded-2xl glass relative overflow-hidden col-span-1 md:col-span-3 hover-glow"
     >
       <div className="p-4 sm:p-6">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
-          <h3
-            className="text-sm font-semibold uppercase tracking-wider"
-            style={{ color: 'var(--text-muted)' }}
-          >
-            Learning Activity
-          </h3>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+          <div>
+            <h3
+              className="text-[11px] font-semibold uppercase tracking-widest mb-1"
+              style={{ color: 'var(--text-muted)' }}
+            >
+              Learning Activity
+            </h3>
+            <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>
+              {totalActivity} lessons in the last 12 weeks
+            </p>
+          </div>
+
           <div className="flex items-center gap-2">
-            <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
+            <span className="text-[10px]" style={{ color: 'var(--text-muted)' }}>
               Less
             </span>
-            {[0, 1, 2, 3, 4].map((level) => (
-              <div
-                key={level}
-                className={`w-3 h-3 rounded-sm ${getActivityColor(level)}`}
-              />
-            ))}
-            <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
+            <div className="flex gap-0.75">
+              {[0, 1, 2, 3, 4].map((level) => (
+                <div
+                  key={level}
+                  className={`w-2.75 h-2.75 rounded-[3px] ${getActivityColor(level)}`}
+                />
+              ))}
+            </div>
+            <span className="text-[10px]" style={{ color: 'var(--text-muted)' }}>
               More
             </span>
           </div>
         </div>
 
-        {/* Contribution Grid — scrollable on mobile */}
+        {/* Contribution Grid */}
         <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
           {/* Month labels */}
           <div
-            className="flex gap-0.75 mb-1 min-w-fit"
+            className="flex gap-0.75 mb-1.5 min-w-fit"
             style={{ paddingLeft: '28px' }}
           >
             {monthLabels.map((m, i) => (
               <div
                 key={i}
-                className="text-[10px] shrink-0"
+                className="text-[10px] shrink-0 font-medium"
                 style={{
                   color: 'var(--text-muted)',
                   minWidth: `${
@@ -124,7 +128,7 @@ export default function ActivityTile({ activities }: ActivityTileProps) {
               {['', 'Mon', '', 'Wed', '', 'Fri', ''].map((day, i) => (
                 <div
                   key={i}
-                  className="h-2.75 flex items-center text-[10px]"
+                  className="h-2.75 flex items-center text-[10px] font-medium"
                   style={{
                     color: 'var(--text-muted)',
                     width: '24px',
@@ -153,17 +157,17 @@ export default function ActivityTile({ activities }: ActivityTileProps) {
                         initial={{ opacity: 0, scale: 0 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{
-                          duration: 0.2,
-                          delay: weekIndex * 0.02 + dayIndex * 0.01,
+                          duration: 0.15,
+                          delay: weekIndex * 0.015 + dayIndex * 0.008,
                         }}
                         title={
                           day
                             ? `${day.date}: ${count} lesson${count !== 1 ? 's' : ''} completed`
                             : ''
                         }
-                        className={`w-2.75 h-2.75 rounded-sm ${getActivityColor(
+                        className={`w-2.75 h-2.75 rounded-[3px] ${getActivityColor(
                           count
-                        )} transition-colors hover:ring-1 hover:ring-white/30 cursor-pointer`}
+                        )} transition-all duration-150 hover:ring-1 hover:ring-white/20 hover:scale-125 cursor-pointer`}
                       />
                     );
                   })}
@@ -175,16 +179,20 @@ export default function ActivityTile({ activities }: ActivityTileProps) {
 
         {/* Stats Row */}
         <div
-          className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6 mt-4 pt-4 border-t"
+          className="flex flex-wrap items-center gap-x-6 gap-y-2 mt-5 pt-4 border-t"
           style={{ borderColor: 'var(--border-color)' }}
         >
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-emerald-500" />
+            <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
+              <span className="font-bold text-white">{activeDays}</span> active days
+            </p>
+          </div>
           <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
-            <span className="font-bold text-white">{totalActivity}</span>{' '}
-            lessons completed in the last 12 weeks
+            <span className="font-bold text-white">{totalActivity}</span> lessons completed
           </p>
-          <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
-            <span className="font-bold text-white">{activeDays}</span>{' '}
-            active days
+          <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+            {Math.round((activeDays / 84) * 100)}% consistency
           </p>
         </div>
       </div>
